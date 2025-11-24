@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MarketPlace - Интернет-магазин</title>
+   <link rel="stylesheet" href="/static/project.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-top">
+            <div class="logo">MarketPlace</div>
+            <div class="search-bar">
+                <input type="text" placeholder="Поиск товаров...">
+            </div>
+            <div class="user-actions">
+
+                {%if user.status %}
+                 <a href="#" onclick="window.location.href='/basket'">Корзина</a>
+                <a href="#" onclick="window.location.href='/favourites'">Избранное </a>
+                <a href="#" onclick="window.location.href='/personalaccount'">Личный Кабинет </a>
+                {% else %}
+                <a href="#" onclick="window.location.href='/enter'">Войти</a>
+                {% endif %}
+
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <ul class="nav-menu">
+                <li><a href="#">Каталог</a></li>
+                <li><a href="#">Акции</a></li>
+                <li><a href="#">Бренды</a></li>
+                <li><a href="#">Электроника</a></li>
+                <li><a href="#">Одежда</a></li>
+                <li><a href="#">Дом и сад</a></li>
+                <li><a href="#">Красота</a></li>
+                <li><a href="#">Спорт</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Banner -->
+        <div class="banner">
+            <h1>Большая распродажа!</h1>
+            <p>Скидки до 70% на тысячи товаров</p>
+        </div>
+
+        <!-- Categories -->
+        <section class="categories">
+            <h2 class="section-title">Популярные категории</h2>
+            <div class="category-grid">
+                {% for category in category %}
+
+                        <div class="category-card">
+                            <h3>{{category.name}}</h3>
+                        </div>
+
+                {% endfor %}
+
+            </div>
+        </section>
+
+        <!-- Products -->
+        <section class="products">
+            <h2 class="section-title">Хиты продаж</h2>
+            <div class="product-grid">
+                {% for product in products %}
+                    <div class="product-card" onclick="window.location.href='/product/{{product.id}}'">
+                        <img style = "width : 100%" src="{{product.photo}}" alt="Проект 1">
+                        <div class="product-info">
+                            <h3>{{product.name}}</h3>
+                             <p>{{product.price}}</p>
+                             <p>{{product.availability}}</p>
+                            <p>{{product.description}}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+
+
+
+            </div>
+        </section>
+
+        <!-- Additional Sections -->
+        <section class="products">
+            <h2 class="section-title">Специальные предложения</h2>
+            <div class="product-grid">
+                <!-- More product cards here -->
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>О компании</h3>
+                <ul>
+                    <li><a href="#">О нас</a></li>
+                    <li><a href="#">Контакты</a></li>
+                    <li><a href="#">Вакансии</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Помощь</h3>
+                <ul>
+                    <li><a href="#">Доставка</a></li>
+                    <li><a href="#">Оплата</a></li>
+                    <li><a href="#">Возврат</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Контакты</h3>
+                <p>+7 (800) 123-45-67</p>
+                <p>support@marketplace.ru</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 MarketPlace. Все права защищены.</p>
+        </div>
+    </footer>
+</body>
+</html>

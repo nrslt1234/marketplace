@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Детали товара - Магазин</title>
+    <link rel="stylesheet" href="/static/another_project.css">
+
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+
+                <div class="logo" onclick="window.location.href='/project'">TechStore</div>
+
+
+                <nav class="nav-links">
+                    <a href="/">Главная</a>
+                    <a href="/catalog">Каталог</a>
+                    <a href="/about">О нас</a>
+                    <a href="/contact">Контакты</a>
+                    <a href="/cart" class="cart-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count">3</span>
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Product Detail -->
+    <div class="container">
+        <div class="product-detail">
+            <div class="product-content">
+                <div class="product-image">
+                    <img style = "width : 100%" src={{product.photo}}
+                         alt="Название товара" id="productImage">
+                    <div class="availability" id="availabilityBadge">В наличии</div>
+                     <!-- ❤️ Кнопка избранного -->
+                        <div class="favorite-icon" onclick="addToFav({{product.id}})">
+                            <i class="fa-solid fa-heart"></i>
+                        </div>
+                </div>
+
+                <div class="product-info">
+                    <h1 id="productName">{{product.name}}</h1>
+                    <div class="price" id="productPrice">{{product.price}}</div>
+
+                    <div class="description" id="productDescription">
+                        {{product.description}}
+                    </div>
+
+                    <div class="product-actions">
+                        <div class="quantity-selector">
+                            <button class="quantity-btn" onclick="changeQuantity(-1)">-</button>
+                            <input type="number" class="quantity-input" id="quantity" value="1" min="1" max="10">
+                            <button class="quantity-btn" onclick="changeQuantity(1)">+</button>
+                        </div>
+                        <button class="add-to-cart" id="addToCartBtn" onclick="addToCart({{product.id}})">
+                            <i class="fas fa-shopping-cart"></i> В корзину
+                        </button>
+                        <button class="buy-now" onclick="buyNow()">Купить сейчас</button>
+                    </div>
+
+                    <div class="product-meta">
+                        <div class="meta-item">
+                            <span class="meta-label">Артикул:</span>
+                            <span class="meta-value" id="productId">#SM-G998B</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Категория:</span>
+                            <span class="meta-value">Смартфоны и гаджеты</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Гарантия:</span>
+                            <span class="meta-value">24 месяца</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Доставка:</span>
+                            <span class="meta-value">1-2 дня</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Related Products -->
+        <div class="related-products">
+            <h2 class="section-title">Похожие товары</h2>
+            <div class="products-grid" id="relatedProducts">
+                <!-- Будет заполнено через JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Магазин</h3>
+                    <ul class="footer-links">
+                        <li><a href="/about">О нас</a></li>
+                        <li><a href="/contact">Контакты</a></li>
+                        <li><a href="/delivery">Доставка</a></li>
+                        <li><a href="/payment">Оплата</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Помощь</h3>
+                    <ul class="footer-links">
+                        <li><a href="/faq">FAQ</a></li>
+                        <li><a href="/returns">Возврат</a></li>
+                        <li><a href="/warranty">Гарантия</a></li>
+                        <li><a href="/support">Поддержка</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Контакты</h3>
+                    <ul class="footer-links">
+                        <li>📞 +7 (495) 123-45-67</li>
+                        <li>✉️ info@techstore.ru</li>
+                        <li>📍 Москва, ул. Примерная, 123</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2024 TechStore. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/static/another_project.js"> </script>
+</body>
+</html>

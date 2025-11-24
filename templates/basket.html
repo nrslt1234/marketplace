@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Корзина - Маркетплейс</title>
+   <link rel="stylesheet" href="/static/basket.css">
+
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo" onclick="window.location.href='/project'">Назад</div>
+                <nav class="nav-links">
+                    <a href="index.html">Главная</a>
+                    <a href="catalog.html">Каталог</a>
+                    <a href="categories.html">Категории</a>
+                    <a href="about.html">О нас</a>
+                </nav>
+                <div class="user-actions">
+                    <a href="search.html" class="icon-btn">
+                        <i class="fas fa-search"></i>
+                    </a>
+                    <a href="favorites.html" class="icon-btn">
+                        <i class="fas fa-heart"></i>
+                        <span class="badge">3</span>
+                    </a>
+                    <a href="cart.html" class="icon-btn active">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="badge">2</span>
+                    </a>
+                    <a href="profile.html" class="icon-btn">
+                        <i class="fas fa-user"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Title -->
+    <section class="page-title">
+        <div class="container">
+            <h1><i class="fas fa-shopping-cart" style="color: #4361ee; margin-right: 10px;"></i>Корзина</h1>
+            <p>Товары, которые вы добавили для покупки</p>
+        </div>
+    </section>
+
+    <!-- Cart Content -->
+    <div class="container">
+        <!-- Если есть товары в корзине -->
+        <div class="cart-content" id="cartContent">
+            <!-- Список товаров -->
+            <div class="cart-items">
+                <!-- Товар 1 -->
+                {% for basketprod in basketproduct %}
+                <div class="cart-item" id="item{{basketprod.product_id}}">
+                    <div class="item-image">
+                        <img src= "{{basketprod.product.photo}}" alt="{{basketprod.product.name}}">
+                    </div>
+                    <div class="item-details">
+                        <h3 class="item-title">{{basketprod.product.name}}</h3>
+                        <div class="item-price">{{basketprod.product.price}}</div>
+                        <div class="item-actions">
+                            <div class="quantity-controls">
+                                <button class="quantity-btn" onclick="updateQuantity('{{basketprod.id}}', -1)" >-</button>
+
+                                <input type="number" class="quantity-input" id="quantity-item{{basketprod.id}}" value="{{basketprod.amount}}" min="1" max="10">
+
+                                <button class="quantity-btn" onclick="updateQuantity('{{basketprod.id}}', 1)">+</button>
+                            </div>
+                            <button class="remove-btn" onclick="removeItem('item{{basketprod.id}}')">
+                                <i class="fas fa-trash"></i> Удалить
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+
+            </div>
+
+            <!-- Итоги заказа -->
+            <div class="order-summary">
+                <h3 class="summary-title">Итоги заказа</h3>
+                <div class="summary-row">
+                   <span>Товары (<span id="itemsCount">{{amount}}</span>)</span>
+                    <span id="itemsTotal">{{price}}₽</span>
+                </div>
+                <div class="summary-row">
+                    <span>Доставка</span>
+                    <span>Бесплатно</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Итого</span>
+                    <span id="orderTotal">{{price}}₽</span>
+                </div>
+                <button class="checkout-btn" onclick="SaveOrder(event)">Перейти к оформлению</button>
+                <a href="catalog.html" class="continue-shopping">Продолжить покупки</a>
+            </div>
+        </div>
+
+        <!-- Если корзина пуста -->
+        <!-- <div class="empty-state" id="emptyState" style="display: none;">
+            <i class="fas fa-shopping-cart"></i>
+            <h3>Ваша корзина пуста</h3>
+            <p>Добавьте товары в корзину, чтобы сделать заказ</p>
+            <a href="catalog.html" class="browse-btn">Перейти в каталог</a>
+        </div> -->
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Магазин</h3>
+                    <ul class="footer-links">
+                        <li><a href="about.html">О нас</a></li>
+                        <li><a href="contacts.html">Контакты</a></li>
+                        <li><a href="delivery.html">Доставка</a></li>
+                        <li><a href="payment.html">Оплата</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Помощь</h3>
+                    <ul class="footer-links">
+                        <li><a href="faq.html">FAQ</a></li>
+                        <li><a href="returns.html">Возврат</a></li>
+                        <li><a href="warranty.html">Гарантия</a></li>
+                        <li><a href="support.html">Поддержка</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Контакты</h3>
+                    <ul class="footer-links">
+                        <li>📞 +7 (495) 123-45-67</li>
+                        <li>✉️ info@marketplace.ru</li>
+                        <li>📍 Москва, ул. Примерная, 123</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2024 MarketPlace. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+   <script src="/static/basket.js"> </script>
+</body>
+</html>

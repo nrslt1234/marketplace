@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Интернет-маркетплейс - Регистрация</title>
+     <link rel="stylesheet" href="/static/enter.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo" onclick="window.location.href='/project'">Назад</div>
+                <nav class="nav-links">
+                    <a href="index.html">Главная</a>
+                    <a href="#">Каталог</a>
+                    <a href="#">О нас</a>
+                    <a href="#">Контакты</a>
+                </nav>
+                <div class="auth-buttons">
+                    <a href="index.html" class="btn btn-login">ВОЙТИ</a>
+                    <a href="#" class="btn btn-register">РЕГИСТРАЦИЯ</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Registration Form -->
+    <section class="register-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Регистрация аккаунта</h2>
+                <p>Заполните форму ниже, чтобы создать новый аккаунт</p>
+            </div>
+            <div class="form-container">
+                <form id="registerForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="firstName">Имя</label>
+                            <input type="text" id="firstName" name="firstName" placeholder="Ваше имя" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Фамилия</label>
+                            <input type="text" id="lastName" name="lastName" placeholder="Ваша фамилия" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Электронная почта</label>
+                        <input type="email" id="email" name="email" placeholder="Ваш email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Телефон</label>
+                        <input type="tel" id="phone" name="phone" placeholder="Ваш номер телефона">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="password">Пароль</label>
+                            <input type="password" id="password" name="password" placeholder="Придумайте пароль" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPassword">Подтвердите пароль</label>
+                            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Повторите пароль" required>
+                        </div>
+                    </div>
+
+                    <div class="terms">
+                        <input type="checkbox" id="agreeTerms" required>
+                        <label for="agreeTerms">Я согласен с <a href="#">условиями использования</a> и <a href="#">политикой конфиденциальности</a></label>
+                    </div>
+                    <button type="submit" class="submit-btn" onclick="RegTo(event)">Зарегистрироваться</button>
+                </form>
+                <div class="form-footer">
+                    <p>Уже есть аккаунт? <a href="/autho">Войти</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Магазин</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">О нас</a></li>
+                        <li><a href="#">Контакты</a></li>
+                        <li><a href="#">Доставка</a></li>
+                        <li><a href="#">Оплата</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Помощь</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Возврат</a></li>
+                        <li><a href="#">Гарантия</a></li>
+                        <li><a href="#">Поддержка</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Контакты</h3>
+                    <ul class="footer-links">
+                        <li>📞 +7 (495) 123-45-67</li>
+                        <li>✉️ info@marketplace.ru</li>
+                        <li>📍 Москва, ул. Примерная, 123</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2024 MarketPlace. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Обработка формы регистрации
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            // Проверка совпадения паролей
+            if (password !== confirmPassword) {
+                alert('Пароли не совпадают!');
+                return;
+            }
+
+            // Проверка согласия с условиями
+            if (!document.getElementById('agreeTerms').checked) {
+                alert('Необходимо согласиться с условиями использования!');
+                return;
+            }
+
+            // В реальном приложении здесь будет AJAX-запрос к серверу
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            console.log('Данные регистрации:', data);
+
+            // Простая имитация успешной регистрации
+            alert('Регистрация завершена успешно!');
+            window.location.href = 'index.html';
+        });
+    </script>
+    <script src="/static/reg.js"> </script>
+</body>
+</html>

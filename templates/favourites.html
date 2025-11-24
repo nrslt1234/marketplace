@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Избранное - Маркетплейс</title>
+    <link rel="stylesheet" href="/static/favourites.css">
+
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo" onclick="window.location.href='/project'">Назад</div>
+                <nav class="nav-links">
+                    <a href="index.html">Главная</a>
+                    <a href="catalog.html">Каталог</a>
+                    <a href="categories.html">Категории</a>
+                    <a href="about.html">О нас</a>
+                </nav>
+                <div class="user-actions">
+                    <a href="search.html" class="icon-btn">
+                        <i class="fas fa-search"></i>
+                    </a>
+                    <a href="favorites.html" class="icon-btn active">
+                        <i class="fas fa-heart"></i>
+                        <span class="badge">3</span>
+                    </a>
+                    <a href="cart.html" class="icon-btn">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="badge">2</span>
+                    </a>
+                    <a href="profile.html" class="icon-btn">
+                        <i class="fas fa-user"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Title -->
+    <section class="page-title">
+        <div class="container">
+            <h1><i class="fas fa-heart" style="color: #e63946; margin-right: 10px;"></i>Избранное</h1>
+            <p>Товары, которые вы сохранили для себя</p>
+        </div>
+    </section>
+
+    <!-- Favorites Section -->
+    <section class="favorites-section">
+        <div class="container">
+            <!-- Если есть избранные товары -->
+            <div class="favorites-grid" id="favoritesGrid">
+
+                {% for favourite in favourites %}
+
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src= {{favourite.product.photo}}>
+                        <div class="product-actions">
+                            <a href="#" class="action-btn active" onclick="removeFromFavorites(this)">
+                                <i class="fas fa-heart"></i>
+                            </a>
+                        </div>
+
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">{{favourite.product.name}}</h3>
+                        <div class="product-price">{{favourite.product.price}}</div>
+                        <div class="product-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                            <span>(128)</span>
+                        </div>
+                        <button class="add-to-cart">В корзину</button>
+                    </div>
+                </div>
+                {% endfor %}
+
+
+            </div>
+
+            <!-- Если избранных товаров нет -->
+            <!-- <div class="empty-state" id="emptyState" style="display: none;">
+                <i class="fas fa-heart"></i>
+                <h3>В избранном пока пусто</h3>
+                <p>Сохраняйте понравившиеся товары здесь, чтобы не потерять их и вернуться к ним позже</p>
+                <a href="catalog.html" class="browse-btn">Перейти в каталог</a>
+            </div> -->
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Магазин</h3>
+                    <ul class="footer-links">
+                        <li><a href="about.html">О нас</a></li>
+                        <li><a href="contacts.html">Контакты</a></li>
+                        <li><a href="delivery.html">Доставка</a></li>
+                        <li><a href="payment.html">Оплата</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Помощь</h3>
+                    <ul class="footer-links">
+                        <li><a href="faq.html">FAQ</a></li>
+                        <li><a href="returns.html">Возврат</a></li>
+                        <li><a href="warranty.html">Гарантия</a></li>
+                        <li><a href="support.html">Поддержка</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Контакты</h3>
+                    <ul class="footer-links">
+                        <li>📞 +7 (495) 123-45-67</li>
+                        <li>✉️ info@marketplace.ru</li>
+                        <li>📍 Москва, ул. Примерная, 123</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2024 MarketPlace. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Функция для удаления товара из избранного
+        function removeFromFavorites(button) {
+            const productCard = button.closest('.product-card');
+            productCard.style.opacity = '0';
+            productCard.style.transform = 'scale(0.9)';
+
+            setTimeout(() => {
+                productCard.remove();
+                updateFavoritesCount();
+
+                // Проверяем, остались ли товары в избранном
+                const favoritesGrid = document.getElementById('favoritesGrid');
+                if (favoritesGrid.children.length === 0) {
+                    showEmptyState();
+                }
+            }, 300);
+        }
+
+        // Обновление счетчика избранного
+        function updateFavoritesCount() {
+            const badge = document.querySelector('.icon-btn.active .badge');
+            const currentCount = parseInt(badge.textContent);
+            badge.textContent = currentCount - 1;
+        }
+
+        // Показать состояние "пусто"
+        function showEmptyState() {
+            const favoritesGrid = document.getElementById('favoritesGrid');
+            favoritesGrid.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-heart"></i>
+                    <h3>В избранном пока пусто</h3>
+                    <p>Сохраняйте понравившиеся товары здесь, чтобы не потерять их и вернуться к ним позже</p>
+                    <a href="catalog.html" class="browse-btn">Перейти в каталог</a>
+                </div>
+            `;
+        }
+
+        // Обработка кнопки "В корзину"
+        document.querySelectorAll('.add-to-cart').forEach(button => {
+            button.addEventListener('click', function() {
+                const productTitle = this.closest('.product-info').querySelector('.product-title').textContent;
+                alert(`Товар "${productTitle}" добавлен в корзину!`);
+            });
+        });
+    </script>
+</body>
+</html>

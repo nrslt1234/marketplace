@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Личный кабинет - TechStore</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .icon-btn {
+            position: relative;
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        .badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #e63946;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: white;
+            color: #4361ee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Profile Section */
+        .profile-section {
+            padding: 2rem 0;
+        }
+
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .profile-title {
+            font-size: 2rem;
+            color: #333;
+        }
+
+        .logout-btn {
+            background: #e63946;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #c1121f;
+        }
+
+        /* Profile Content */
+        .profile-content {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .profile-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Sidebar */
+        .profile-sidebar {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            height: fit-content;
+        }
+
+        .user-info {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .avatar-large {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 0 auto 1rem;
+        }
+
+        .user-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .user-email {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .menu-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .menu-item a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            color: #555;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .menu-item a:hover, .menu-item a.active {
+            background: #4361ee;
+            color: white;
+        }
+
+        .menu-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .profile-main {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #4361ee;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin: 0 auto 1rem;
+        }
+
+        .card-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #4361ee;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Sections */
+        .section {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section-title i {
+            color: #4361ee;
+        }
+
+        /* Orders */
+        .orders-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .order-item:hover {
+            border-color: #4361ee;
+            box-shadow: 0 2px 8px rgba(67, 97, 238, 0.1);
+        }
+
+        .order-info h4 {
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .order-meta {
+            display: flex;
+            gap: 2rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .order-status {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-delivered {
+            background: #d8f3dc;
+            color: #2d6a4f;
+        }
+
+        .status-processing {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-shipped {
+            background: #cce7ff;
+            color: #004085;
+        }
+
+        /* Personal Info Form */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            border-color: #4361ee;
+            outline: none;
+        }
+
+        .save-btn {
+            background: #4361ee;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .save-btn:hover {
+            background: #3a0ca3;
+        }
+
+        /* Footer */
+        footer {
+            background: #2b2d42;
+            color: white;
+            padding: 3rem 0 1rem;
+            margin-top: 3rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-column h3 {
+            color: #4361ee;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links a {
+            color: #adb5bd;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: #4361ee;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #4a4e69;
+            color: #adb5bd;
+        }
+
+        /* Active section management */
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo" onclick="window.location.href='/'">TechStore</div>
+                <nav class="nav-links">
+                    <a onclick="window.location.href='/project'">Главная</a>
+                    <a href="/catalog">Каталог</a>
+                    <a href="/about">О нас</a>
+                    <a href="/contact">Контакты</a>
+                </nav>
+                <div class="user-menu">
+                    <a href="/cart" class="icon-btn">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="badge">3</span>
+                    </a>
+                    <a href="/favorites" class="icon-btn">
+                        <i class="fas fa-heart"></i>
+                        <span class="badge">5</span>
+                    </a>
+                    <div class="user-avatar" id="userAvatar">
+                        ИИ
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Profile Section -->
+    <section class="profile-section">
+        <div class="container">
+            <div class="profile-header">
+                <h1 class="profile-title">Личный кабинет</h1>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Выйти
+                </button>
+            </div>
+
+            <div class="profile-content">
+                <!-- Sidebar -->
+                <div class="profile-sidebar">
+                    <div class="user-info">
+                        <div class="avatar-large">ИИ</div>
+                        <div class="user-name">{{user.first_name}} {{user.last_name}}</div>
+                        <div class="user-email">{{user.email}}</div>
+                    </div>
+
+                    <ul class="sidebar-menu">
+                        <li class="menu-item">
+                            <a href="#" class="active" onclick="showSection('dashboard')">
+                                <i class="fas fa-chart-line"></i>
+                                <span>Обзор</span>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="/myorders" onclick="showSection('orders')">
+                                <i class="fas fa-shopping-bag"></i>
+                                <span>Мои заказы</span>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="#" onclick="showSection('profile')">
+                                <i class="fas fa-user"></i>
+                                <span>Личные данные</span>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="#" onclick="showSection('addresses')">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>Адреса доставки</span>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="#" onclick="showSection('favorites')">
+                                <i class="fas fa-heart"></i>
+                                <span>Избранное</span>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="#" onclick="showSection('security')">
+                                <i class="fas fa-shield-alt"></i>
+                                <span>Безопасность</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Main Content -->
+                <div class="profile-main">
+                    <!-- Dashboard Section -->
+                    <div id="dashboard" class="content-section active">
+                        <div class="dashboard-cards">
+                            <div class="card">
+                                <div class="card-icon">
+                                    <i class="fas fa-shopping-bag"></i>
+                                </div>
+                                <div class="card-value">12</div>
+                                <div class="card-label">Всего заказов</div>
+                            </div>
+                            <div class="card">
+                                <div class="card-icon">
+                                    <i class="fas fa-heart"></i>
+                                </div>
+                                <div class="card-value">8</div>
+                                <div class="card-label">Избранные товары</div>
+                            </div>
+                            <div class="card">
+                                <div class="card-icon">
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <div class="card-value">4.8</div>
+                                <div class="card-label">Рейтинг покупателя</div>
+                            </div>
+                            <div class="card">
+                                <div class="card-icon">
+                                    <i class="fas fa-coins"></i>
+                                </div>
+                                <div class="card-value">5 240</div>
+                                <div class="card-label">Бонусные баллы</div>
+                            </div>
+                        </div>
+
+                        <div class="section">
+                            <h3 class="section-title">
+                                <i class="fas fa-clock"></i>
+                                Последние заказы
+                            </h3>
+                            <div class="orders-list">
+                                <div class="order-item">
+                                    <div class="order-info">
+                                        <h4>Заказ #TS-7842</h4>
+                                        <div class="order-meta">
+                                            <span>15 марта 2024</span>
+                                            <span>3 товара</span>
+                                            <span>12 490 ₽</span>
+                                        </div>
+                                    </div>
+                                    <div class="order-status status-delivered">Доставлен</div>
+                                </div>
+                                <div class="order-item">
+                                    <div class="order-info">
+                                        <h4>Заказ #TS-7791</h4>
+                                        <div class="order-meta">
+                                            <span>10 марта 2024</span>
+                                            <span>1 товар</span>
+                                            <span>8 990 ₽</span>
+                                        </div>
+                                    </div>
+                                    <div class="order-status status-shipped">В пути</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Orders Section -->
+                    <div id="orders" class="content-section">
+                        <div class="section">
+                            <h3 class="section-title">
+                                <i class="fas fa-shopping-bag"></i>
+                                История заказов
+                            </h3>
+                            <div class="orders-list">
+                                <div class="order-item">
+                                    <div class="order-info">
+                                        <h4>Заказ #TS-7842</h4>
+                                        <div class="order-meta">
+                                            <span>15 марта 2024</span>
+                                            <span>3 товара</span>
+                                            <span>12 490 ₽</span>
+                                        </div>
+                                    </div>
+                                    <div class="order-status status-delivered">Доставлен</div>
+                                </div>
+                                <div class="order-item">
+                                    <div class="order-info">
+                                        <h4>Заказ #TS-7791</h4>
+                                        <div class="order-meta">
+                                            <span>10 марта 2024</span>
+                                            <span>1 товар</span>
+                                            <span>8 990 ₽</span>
+                                        </div>
+                                    </div>
+                                    <div class="order-status status-shipped">В пути</div>
+                                </div>
+                                <div class="order-item">
+                                    <div class="order-info">
+                                        <h4>Заказ #TS-7654</h4>
+                                        <div class="order-meta">
+                                            <span>5 марта 2024</span>
+                                            <span>2 товара</span>
+                                            <span>15 320 ₽</span>
+                                        </div>
+                                    </div>
+                                    <div class="order-status status-delivered">Доставлен</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Profile Section -->
+                    <div id="profile" class="content-section">
+                        <div class="section">
+                            <h3 class="section-title">
+                                <i class="fas fa-user"></i>
+                                Личные данные
+                            </h3>
+                            <form id="profileForm">
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="firstName">Имя</label>
+                                        <input type="text" id="firstName" value="Иван" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="lastName">Фамилия</label>
+                                        <input type="text" id="lastName" value="Иванов" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="email">Email</label>
+                                        <input type="email" id="email" value="ivan@example.com" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="phone">Телефон</label>
+                                        <input type="tel" id="phone" value="+7 (999) 123-45-67">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="birthDate">Дата рождения</label>
+                                        <input type="date" id="birthDate" value="1990-05-15">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="gender">Пол</label>
+                                        <select id="gender">
+                                            <option value="male" selected>Мужской</option>
+                                            <option value="female">Женский</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <button type="submit" class="save-btn">Сохранить изменения</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Other sections can be added similarly -->
+                    <div id="addresses" class="content-section">
+                        <div class="section">
+                            <h3 class="section-title">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Адреса доставки
+                            </h3>
+                            <p>Здесь будут ваши адреса доставки...</p>
+                        </div>
+                    </div>
+
+                    <div id="favorites" class="content-section">
+                        <div class="section">
+                            <h3 class="section-title">
+                                <i class="fas fa-heart"></i>
+                                Избранные товары
+                            </h3>
+                            <p>Здесь будут ваши избранные товары...</p>
+                        </div>
+                    </div>
+
+                    <div id="security" class="content-section">
+                        <div class="section">
+                            <h3 class="section-title">
+                                <i class="fas fa-shield-alt"></i>
+                                Безопасность
+                            </h3>
+                            <p>Настройки безопасности аккаунта...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Магазин</h3>
+                    <ul class="footer-links">
+                        <li><a href="/about">О нас</a></li>
+                        <li><a href="/contact">Контакты</a></li>
+                        <li><a href="/delivery">Доставка</a></li>
+                        <li><a href="/payment">Оплата</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Помощь</h3>
+                    <ul class="footer-links">
+                        <li><a href="/faq">FAQ</a></li>
+                        <li><a href="/returns">Возврат</a></li>
+                        <li><a href="/warranty">Гарантия</a></li>
+                        <li><a href="/support">Поддержка</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Контакты</h3>
+                    <ul class="footer-links">
+                        <li>📞 +7 (495) 123-45-67</li>
+                        <li>✉️ info@techstore.ru</li>
+                        <li>📍 Москва, ул. Примерная, 123</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2024 TechStore. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Переключение между разделами
+        function showSection(sectionId) {
+            // Скрыть все разделы
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Показать выбранный раздел
+            document.getElementById(sectionId).classList.add('active');
+
+            // Обновить активный пункт меню
+            document.querySelectorAll('.sidebar-menu a').forEach(link => {
+                link.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        // Выход из аккаунта
+        function logout() {
+            if (confirm('Вы уверены, что хотите выйти?')) {
+                // Здесь будет запрос к API для выходаy
+                window.location.href = '/autho';
+            }
+        }
+
+        // Обработка формы профиля
+        document.getElementById('profileForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const formData = {
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                birthDate: document.getElementById('birthDate').value,
+                gender: document.getElementById('gender').value
+            };
+
+            // Здесь будет AJAX запрос к API
+            console.log('Сохранение данных:', formData);
+            alert('Данные успешно сохранены!');
+        });
+
+        // Инициализация при загрузке
+        document.addEventListener('DOMContentLoaded', function() {
+            // Можно загрузить данные пользователя с сервера
+            console.log('Личный кабинет загружен');
+        });
+    </script>
+
+</body>
+</html>
