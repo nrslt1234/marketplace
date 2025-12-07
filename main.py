@@ -15,7 +15,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from sqlalchemy import select, insert, or_, and_, update, delete
+from sqlalchemy import select, insert, or_, and_, update, delete, func
 from sqlalchemy.orm import joinedload, selectinload
 
 from DataBase.models import Service, Ourwork, Products, Category, BasketClient, BasketProduct, Favourites, Client, \
@@ -150,6 +150,32 @@ def homes(request: Request, data: OrderSchema):
 
     return {"status": True}
 
+
+@app.post("/basket/remove")
+def remove_from_basket(request: Request, data: CheckItem):
+    user = request.session.get("user")
+    if user is None:
+        return {"status": False, "message": "Необходима авторизация"}
+
+    client_id = user.get("client_id")
+
+    with SessionLocal() as session:
+        # Находим корзину клиента
+        stmt = select(BasketClient).where(BasketClient.client_id == client_id)
+        basket_client = session.execute(stmt).scalars().first()
+
+        if basket_client:
+            # Удаляем товар из корзины
+            stmt = delete(BasketProduct).where(
+                and_(
+                    BasketProduct.basket_client_id == basket_client.id,
+                    BasketProduct.product_id == data.product_id
+                )
+            )
+            session.execute(stmt)
+            session.commit()
+
+        return {"status": True, "message": "Товар удален из корзины"}
 
 # Ручка для перехода на страничку ИЗБРАННОЕ при нажатии кнопки Избранное
 @app.get("/basket", response_class=HTMLResponse)
@@ -424,10 +450,23 @@ def homes(
 ):
     total_in_page = 2
     with SessionLocal() as session:
-        stmt = select(Products).where(Products.name.like(f"%{q}%")).offset(total_in_page*(page-1)).limit(total_in_page)
+        stmt = select(Products).join(Category).where(or_(Category.name == category, category == "")).where(Products.name.ilike(f"%{q}%")).offset(total_in_page*(page-1)).limit(total_in_page)
         list_of_products=session.execute(stmt).scalars().all()
 
-    return templates.TemplateResponse("search.html",{"request": request, "list_of_products" : list_of_products, "page" : page})
+        stmt = (select(func.count(Products.id)).join(Category).where(or_(Category.name == category, category == "")).where(Products.name.ilike(f"%{q}%")))
+        amount = session.execute(stmt).scalar()
+
+        amount_of_pages = amount // total_in_page
+
+        if amount % total_in_page != 0:
+            amount_of_pages += 1
+
+        stmt = select(Category)
+        categories = session.execute(stmt).scalars().all()
+
+
+
+    return templates.TemplateResponse("search.html",{"request": request, "list_of_products" : list_of_products, "categories" : categories,"category" : category, "page" : page, "q" : q,"amount":amount, "amount_of_pages" : amount_of_pages})
 
 
 if __name__ == "__main__":

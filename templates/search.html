@@ -4,275 +4,112 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Результаты поиска - Наш сайт</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    <link rel="stylesheet" href="/static/search.css">
 
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            background-color: #f5f5f5;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .header {
-            background-color: #2c3e50;
-            color: white;
-            padding: 1rem 0;
-            margin-bottom: 30px;
-        }
-
-        .search-form {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 30px;
-        }
-
-        .search-input {
-            flex: 1;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 4px;
-            font-size: 16px;
-        }
-
-        .search-button {
-            padding: 12px 24px;
-            background-color: #3498db;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        .search-button:hover {
-            background-color: #2980b9;
-        }
-
-        .search-info {
-            margin-bottom: 20px;
-            color: #666;
-        }
-
-        .results-count {
-            font-weight: bold;
-            color: #2c3e50;
-        }
-
-        .search-query {
-            font-weight: bold;
-            color: #e74c3c;
-        }
-
-        .results-list {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }
-
-        .result-item {
-            padding: 20px;
-            border-bottom: 1px solid #eee;
-            transition: background-color 0.2s;
-        }
-
-        .result-item:hover {
-            background-color: #f8f9fa;
-        }
-
-        .result-item:last-child {
-            border-bottom: none;
-        }
-
-        .result-title {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
-
-        .result-title a {
-            color: #2c3e50;
-            text-decoration: none;
-        }
-
-        .result-title a:hover {
-            color: #3498db;
-        }
-
-        .result-url {
-            color: #27ae60;
-            font-size: 14px;
-            margin-bottom: 8px;
-        }
-
-        .result-snippet {
-            color: #666;
-            line-height: 1.5;
-        }
-
-        .highlight {
-            background-color: #fff3cd;
-            padding: 2px 4px;
-            border-radius: 2px;
-        }
-
-        .pagination {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            margin-top: 30px;
-        }
-
-        .page-button {
-            padding: 8px 16px;
-            border: 1px solid #ddd;
-            background: white;
-            border-radius: 4px;
-            cursor: pointer;
-            text-decoration: none;
-            color: #333;
-        }
-
-        .page-button:hover {
-            background-color: #f8f9fa;
-        }
-
-        .page-button.active {
-            background-color: #3498db;
-            color: white;
-            border-color: #3498db;
-        }
-
-        .no-results {
-            text-align: center;
-            padding: 40px;
-            color: #666;
-        }
-
-        .suggestions {
-            margin-top: 20px;
-            padding: 15px;
-            background: #e8f4fc;
-            border-radius: 4px;
-        }
-
-        .suggestions h3 {
-            margin-bottom: 10px;
-            color: #2c3e50;
-        }
-
-        .suggestion-item {
-            display: inline-block;
-            margin: 5px 10px 5px 0;
-            color: #3498db;
-            text-decoration: none;
-        }
-
-        .suggestion-item:hover {
-            text-decoration: underline;
-        }
-    </style>
 </head>
 <body>
     <header class="header">
-        <div class="container">
-            <h1>Наш сайт</h1>
+        <div class="container" onclick="window.location.href='/project'">
+            <h1>Назад</h1>
         </div>
     </header>
 
     <div class="container">
         <!-- Форма поиска -->
         <form class="search-form" action="/search" method="GET">
-            <input
-                type="text"
-                name="q"
-                class="search-input"
-                placeholder="Введите поисковый запрос..."
-                value="пример поискового запроса"
-            >
-            <button type="submit" class="search-button">Найти</button>
-        </form>
+    <input type="hidden" name="category" value="{{ category }}">
+    <input
+        type="text"
+        name="q"
+        id="search"
+        class="search-input"
+        placeholder="Введите поисковый запрос..."
+        value="{{ q }}"
+    >
+    <button type="submit" class="search-button">Найти</button>
+</form>
+
 
         <!-- Информация о поиске -->
         <div class="search-info">
-            Найдено <span class="results-count">47</span> результатов по запросу
-            "<span class="search-query">пример поискового запроса</span>"
+            Найдено <span class="results-count">{{amount}}</span> результатов по запросу
+            "<span class="search-query">{{q}}</span>"
         </div>
 
-        <!-- Список результатов -->
-        <div class="results-list">
-            <!-- Результат 1 -->
-            <div class="result-item">
-                <div class="result-title">
-                    <a href="/article/1">Заголовок первой статьи с <span class="highlight">примером</span></a>
-                </div>
-                <div class="result-url">https://example.com/article/1</div>
-                <div class="result-snippet">
-                    Это описание первой статьи, где встречается <span class="highlight">пример</span>
-                    поискового запроса. Здесь показан фрагмент текста, который соответствует
-                    вашему <span class="highlight">примеру</span> поиска.
-                </div>
-            </div>
+        <!-- Основной контент с фильтрами и результатами -->
+        <div class="content-wrapper">
+            <!-- Сайдбар с фильтрами -->
+            <aside class="sidebar">
+    <div class="filters-panel">
+        <h3>Фильтр</h3>
 
-            <!-- Результат 2 -->
-            <div class="result-item">
-                <div class="result-title">
-                    <a href="/article/2">Второй результат поиска по <span class="highlight">примеру</span></a>
-                </div>
-                <div class="result-url">https://example.com/article/2</div>
-                <div class="result-snippet">
-                    Еще один <span class="highlight">пример</span> найденного контента.
-                    Этот результат также содержит искомые слова и показывает, как работает
-                    поисковая система на сайте.
-                </div>
-            </div>
+        <form action="/search" method="GET" class="select-filter-form">
+            <input type="hidden" name="q" value="{{ q }}">
 
-            <!-- Результат 3 -->
-            <div class="result-item">
-                <div class="result-title">
-                    <a href="/article/3">Третий найденный документ</a>
+            <label>Категория</label>
+            <select name="category" class="category-select">
+                <option value="">Все категории</option>
+                {% for some_category in categories %}
+                <option value="{{some_category.name}}" {% if category == some_category.name %} selected {% endif %}>{{some_category.name}}</option>
+                {%endfor%}
+            </select>
+
+            <button type="submit" class="apply-filters-btn">Применить</button>
+            <a href="/search?q={{ q }}" class="reset-filters">Сбросить</a>
+        </form>
+    </div>
+</aside>
+
+
+            <!-- Основная область с результатами -->
+            <main class="main-content">
+                <!-- Список результатов -->
+                <div class="results-list">
+                    {% if list_of_products %}
+                        {% for product in list_of_products %}
+                            <div class="result-item">
+                                <div class="result-title">
+                                    <a href="/product/{{ product.id }}">{{ product.name }}</a>
+                                </div>
+
+                                <div class="result-url">
+                                    Цена: {{ product.price }} ₽
+                                </div>
+
+                                <div class="result-snippet">
+                                    {{ product.description[:120] }}...
+                                </div>
+
+                                <img src="{{ product.photo }}" alt="{{ product.name }}" style="width:150px;border-radius:6px;margin-top:10px;">
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="no-results">Ничего не найдено по запросу "{{ q }}"</div>
+                    {% endif %}
                 </div>
-                <div class="result-url">https://example.com/article/3</div>
-                <div class="result-snippet">
-                    Здесь представлен третий результат поиска. Хотя прямое совпадение
-                    может быть не таким явным, этот контент все равно релевантен
-                    вашему <span class="highlight">примеру</span> запроса.
-                </div>
-            </div>
 
-            <!-- Больше результатов... -->
-        </div>
+                <!-- Пагинация -->
+                <div class="pagination">
+    <a href="/search?q={{q}}&category={{category}}&page={{page - 1}}"
+       class="page-button {% if page == 1 %}disabled-btn{% endif %}">← Назад</a>
 
-        <!-- Пагинация -->
-        <div class="pagination">
-            <a href="#" class="page-button">← Назад</a>
-            <a href="#" class="page-button active">1</a>
-            <a href="#" class="page-button">2</a>
-            <a href="#" class="page-button">3</a>
-            <a href="#" class="page-button">4</a>
-            <a href="#" class="page-button">5</a>
-            <a href="#" class="page-button">Вперед →</a>
-        </div>
+    {% for current_page in range(1, amount_of_pages + 1) %}
+        <a href="/search?q={{q}}&category={{category}}&page={{current_page}}"
+           class="page-button {% if page==current_page %}active{% endif %}">
+           {{current_page}}
+        </a>
+    {% endfor %}
 
-        <!-- Альтернативные предложения -->
-        <div class="suggestions">
-            <h3>Возможно, вы искали:</h3>
-            <a href="#" class="suggestion-item">примеры кода</a>
-            <a href="#" class="suggestion-item">примеры использования</a>
-            <a href="#" class="suggestion-item">практические примеры</a>
-            <a href="#" class="suggestion-item">примеры из жизни</a>
+    <a href="/search?q={{q}}&category={{category}}&page={{page + 1}}"
+       class="page-button {% if (page == amount_of_pages) or (amount_of_pages == 0) %}disabled-btn{% endif %}">
+       Вперед →
+    </a>
+</div>
+
+            </main>
         </div>
     </div>
+
+
 </body>
 </html>
