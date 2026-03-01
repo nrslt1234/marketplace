@@ -446,8 +446,7 @@ def homes(
     request: Request,
     q: str = Query("", description="поисковый запрос"),
     page: int = Query(1, ge=1, description="номер страницы"),
-    category : str = Query("", description="категория")
-):
+    category : str = Query("", description="категория")):
     total_in_page = 2
     with SessionLocal() as session:
         stmt = select(Products).join(Category).where(or_(Category.name == category, category == "")).where(Products.name.ilike(f"%{q}%")).offset(total_in_page*(page-1)).limit(total_in_page)
