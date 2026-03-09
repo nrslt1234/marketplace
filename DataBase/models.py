@@ -21,7 +21,6 @@ class Service(Base):
     name: Mapped[str] = mapped_column()
     description: Mapped[str] = mapped_column()
 
-
 class Ourwork(Base):
     __tablename__ = "ourwork"
     id: Mapped[int] = mapped_column(primary_key=True)

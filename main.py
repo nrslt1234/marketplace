@@ -99,9 +99,6 @@ def homes(request: Request):
 
 
 # Ручка для перехода на страничку личного кабинета при нажатии кнопки ВОЙТИ
-@app.get("/enter", response_class=HTMLResponse)
-def homes(request: Request):
-    return templates.TemplateResponse("enter.html", {"request": request})
 
 
 @app.post("/amount/new")
