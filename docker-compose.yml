@@ -20,7 +20,7 @@ services:
       - .env
 
     ports:
-      - "8000:8000"
+      - "9005:8000"
 
   nginx:
     image: nginx:latest
