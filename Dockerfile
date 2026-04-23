@@ -14,7 +14,7 @@ COPY static ./static
 COPY templates ./templates
 COPY schemas.py .
 COPY security.py .
-COPY conf_minio.py
+COPY conf_minio.py .
 
 EXPOSE 8000
 
