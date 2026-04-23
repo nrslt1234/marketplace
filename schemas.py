@@ -98,3 +98,12 @@ class OrderSchema(BaseModel):
 
 class CheckItemCreate(BaseModel):
     pass
+
+
+class ProductCreate(BaseModel):
+    name: str
+    price: int
+    availability: bool = True
+    description: str
+    photo: str
+    category_id: int

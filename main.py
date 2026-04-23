@@ -1,16 +1,20 @@
+import io
 import os
 import random
 
 import smtplib
+import uuid
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 from dotenv import load_dotenv
 
+from conf_minio import client, bucket
+
 load_dotenv()
 
 import uvicorn
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query, UploadFile, File
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
@@ -25,7 +29,7 @@ from DataBase.session import SessionLocal
 from random import shuffle
 
 from schemas import BasketCreate, FavCreate, RegCreate, AuthoCreate, ForgotCreate, VerifyCode, NewPassword, Newamount, \
-    CheckItem, OrderSchema
+    CheckItem, OrderSchema, ProductCreate
 from security import hash_password, verify_password
 from starlette.middleware.sessions import SessionMiddleware
 
@@ -50,6 +54,48 @@ def home(request: Request):
 @app.get("///", response_class=HTMLResponse)
 def homes(request: Request):
     return templates.TemplateResponse("index_1.html", {"request": request})
+
+
+@app.get("/product/add", response_class=HTMLResponse)
+def homes(request: Request):
+    return templates.TemplateResponse("add_products_form.html", {"request": request})
+
+
+
+@app.post("/upload/photo")
+async def homes(file: UploadFile = File(...)):
+    object_key = f"products/{uuid.uuid4().hex}.jpg"
+
+    content = await file.read()
+
+
+    data = io.BytesIO(content)
+
+    client.put_object(
+        bucket,
+        object_key,
+        data=data,
+
+        content_type=file.content_type
+    )
+
+    return {"object_key": object_key}
+
+@app.post("/upload/products")
+def create_product(product: ProductCreate):
+    with SessionLocal() as session:
+
+        new_product = Products(name=product.name, price=product.price,availability=product.availability,description=product.description, photo=product.photo,category_id=product.category_id,)
+
+
+        session.add(new_product)
+        session.commit()
+
+
+        return {"status": True}
+
+
+
 
 
 @app.get("/project", response_class=HTMLResponse)

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Добавление товара</title>
+    <link rel="stylesheet" href="/static/add_products_form.css">
+
+
+</head>
+<body>
+    <div class="container">
+        <h1>Новый товар</h1>
+        <p class="subtitle">Заполните все поля, чтобы добавить товар в каталог</p>
+
+        <form id="productForm" action="#" method="post">
+            <div class="form-group">
+                <label for="name">Название</label>
+                <input type="text" id="name" name="name" placeholder="Например: Беспроводные наушники" required>
+            </div>
+
+            <div class="form-group">
+                <label for="price">Цена (₽)</label>
+                <input type="number" id="price" name="price" placeholder="0" min="0" step="1" required>
+            </div>
+
+            <div class="form-group">
+                <div class="checkbox-wrapper">
+                    <input type="checkbox" id="availability" name="availability" checked>
+                    <label for="availability">В наличии</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Описание</label>
+                <textarea id="description" name="description" placeholder="Краткое описание товара, особенности..." required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="category">Категория</label>
+                <select id="category" name="category_id" required>
+                    <option value="" disabled selected>Выберите категорию</option>
+                    <!-- Категории можно подставить динамически позже -->
+                    <option value="1">Электроника</option>
+                    <option value="2">Одежда</option>
+                    <option value="3">Дом и сад</option>
+                    <option value="4">Спорт</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="photo">Фото товара</label>
+                <div class="file-input">
+                    <input type="file" id="photo" name="photo" accept="image/*" required>
+                    <small class="optional">Поддерживаются JPG, PNG, WebP</small>
+                </div>
+            </div>
+
+            <hr>
+
+            <button type="submit" class="btn">Сохранить товар</button>
+        </form>
+    </div>
+</body>
+<script src="/static/add_products_form.js"> </script>
+</html>
