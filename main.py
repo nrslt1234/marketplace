@@ -75,7 +75,7 @@ async def homes(file: UploadFile = File(...)):
         bucket,
         object_key,
         data=data,
-
+        length = len(content),
         content_type=file.content_type
     )
 

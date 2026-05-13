@@ -13,3 +13,13 @@ client = Minio(
 bucket = "photos"
 if not client.bucket_exists(bucket):
     client.make_bucket(bucket)
+
+
+
+# from datetime import timedelta
+# d
+# url = client.presigned_get_object(
+#     bucket,
+#     "products/b18147b35221457ca4ed031a28a47092.jpg",
+#     expires=timedelta(hours=2),
+# )
