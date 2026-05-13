@@ -58,7 +58,10 @@ def homes(request: Request):
 
 @app.get("/product/add", response_class=HTMLResponse)
 def homes(request: Request):
-    return templates.TemplateResponse("add_products_form.html", {"request": request})
+    with SessionLocal() as session:
+        stmt = select(Category)
+        categories = session.execute(stmt).scalars().all()
+    return templates.TemplateResponse("add_products_form.html", {"request": request, "categories" : categories})
 
 
 

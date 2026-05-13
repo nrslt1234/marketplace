@@ -41,10 +41,9 @@
                 <select id="category" name="category_id" required>
                     <option value="" disabled selected>Выберите категорию</option>
                     <!-- Категории можно подставить динамически позже -->
-                    <option value="1">Электроника</option>
-                    <option value="2">Одежда</option>
-                    <option value="3">Дом и сад</option>
-                    <option value="4">Спорт</option>
+                    {% for category in categories %}
+                    <option value="{{category.id}}">{{category.name}}</option>
+                    {% endfor %}
                 </select>
             </div>
 
@@ -59,7 +58,7 @@
             <hr>
 
             <button type="submit" class="btn">Сохранить товар</button>
-            <p id = "statusMessage"></p>
+            <p id="statusMessage"></p>
         </form>
     </div>
 </body>
