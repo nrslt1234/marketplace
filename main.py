@@ -29,7 +29,7 @@ from DataBase.session import SessionLocal
 from random import shuffle
 
 from schemas import BasketCreate, FavCreate, RegCreate, AuthoCreate, ForgotCreate, VerifyCode, NewPassword, Newamount, \
-    CheckItem, OrderSchema, ProductCreate
+    CheckItem, OrderSchema, ProductCreate, Categoryamount
 from security import hash_password, verify_password
 from starlette.middleware.sessions import SessionMiddleware
 
@@ -129,6 +129,97 @@ def homes(request: Request, id: int):
         product = session.execute(stmt).scalar_one()
 
     return templates.TemplateResponse("another_project.html", {"request": request, "product": product})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@app.get("/category", response_class=HTMLResponse)
+def homes(request: Request):
+    with SessionLocal() as session:
+
+        stmt = (select(Category))
+        categories = session.execute(stmt).scalars().all()
+
+    return templates.TemplateResponse("add_products_form.html", {"request": request, "categories": categories})
+
+@app.get("/category/{id}", response_class=HTMLResponse)
+def homes(request: Request, id: int):
+    with SessionLocal() as session:
+
+        stmt = select(Category).where(Category.id == id)
+        categories_on_id = session.execute(stmt).scalar_one()
+
+    return templates.TemplateResponse("add_products_form.html", {"request": request, "categories_on_id": categories_on_id})
+
+
+
+
+@app.post("/category")
+def homes(data: Categoryamount):
+    with SessionLocal() as session:
+
+        stmt = select(Category).where(Category.id == data.category_id)
+        category_exist = session.execute(stmt).scalars().one_or_none()
+
+        if category_exist is not None:
+            return {"status": False}
+
+        stmt = insert(Category).values(category_id=data.category_id, name=data.name).returning(Category.id)
+
+        category_id = session.execute(stmt).scalar_one()
+        session.commit()
+    return {"category_id": category_id}
+
+
+
+
+@app.delete("/category/{id}")
+def homes(id: int):
+    with SessionLocal() as session:
+
+        stmt = delete(Category).where(Category.id == id)
+        result = session.execute(stmt)
+        session.commit()
+
+        if result.rowcount == 0:
+            return {"status": False}
+
+    return {"status": True}
+
+
+
+@app.put("/category/{id}")
+def homes(id: int, data: Categoryamount):
+    with SessionLocal() as session:
+
+        stmt = select(Category).where(Category.id == id)
+        category = session.execute(stmt).scalars().one_or_none()
+
+        if category is None:
+            return {"status": False}
+
+        stmt = update(Category).where(Category.id == id).values(id=data.category_id, name=data.name)
+        session.execute(stmt)
+        session.commit()
+
+    return {"status": True}
+
+
+
+
+
+
+
 
 
 @app.get("/bigweb", response_class=HTMLResponse)
