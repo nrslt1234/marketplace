@@ -94,7 +94,6 @@ class NewamountCreate(Newamount):
 
 class Categoryamount(BaseModel):
 
-    category_id: int = Field()
     name: str = Field()
 
 class CategoryamountCreate(Categoryamount):

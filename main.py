@@ -168,13 +168,8 @@ def homes(request: Request, id: int):
 def homes(data: Categoryamount):
     with SessionLocal() as session:
 
-        stmt = select(Category).where(Category.id == data.category_id)
-        category_exist = session.execute(stmt).scalars().one_or_none()
 
-        if category_exist is not None:
-            return {"status": False}
-
-        stmt = insert(Category).values(category_id=data.category_id, name=data.name).returning(Category.id)
+        stmt = insert(Category).values(name=data.name).returning(Category.id)
 
         category_id = session.execute(stmt).scalar_one()
         session.commit()
