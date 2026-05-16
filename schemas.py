@@ -119,3 +119,24 @@ class ProductCreate(BaseModel):
     description: str
     photo: str
     category_id: int
+
+
+
+
+
+class ProductSchema(BaseModel):
+    id: int
+    name: str
+    price: int
+    availability: bool
+    description: str
+    photo: str
+    category_id: int
+
+    model_config = {
+        "from_attributes": True
+    }
+
+
+class ProductsResponse(BaseModel):
+    products: list[ProductSchema]

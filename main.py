@@ -29,7 +29,7 @@ from DataBase.session import SessionLocal
 from random import shuffle
 
 from schemas import BasketCreate, FavCreate, RegCreate, AuthoCreate, ForgotCreate, VerifyCode, NewPassword, Newamount, \
-    CheckItem, OrderSchema, ProductCreate, Categoryamount
+    CheckItem, OrderSchema, ProductCreate, Categoryamount, ProductsResponse
 from security import hash_password, verify_password
 from starlette.middleware.sessions import SessionMiddleware
 
@@ -164,7 +164,7 @@ def homes(request: Request, id: int):
 
 
 @app.get("/product/all")
-def homes(request: Request):
+def homes(request: Request, response_model = ProductsResponse):
     with SessionLocal() as session:
 
         stmt = (select(Products))
