@@ -122,7 +122,7 @@ def homes(request: Request):
                                        "user": user})
 
 
-@app.get("/product/{id}", response_class=HTMLResponse)
+@app.get("/product/get/{id}", response_class=HTMLResponse)
 def homes(request: Request, id: int):
     with SessionLocal() as session:
         stmt = select(Products).where(Products.id == id)

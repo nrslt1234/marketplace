@@ -74,7 +74,7 @@
             <h2 class="section-title">Хиты продаж</h2>
             <div class="product-grid">
                 {% for product in products %}
-                    <div class="product-card" onclick="window.location.href='/product/{{product.id}}'">
+                    <div class="product-card" onclick="window.location.href='/product/get/{{product.id}}'">
                         <img style = "width : 100%" src="{{product.photo}}" alt="Проект 1">
                         <div class="product-info">
                             <h3>{{product.name}}</h3>
