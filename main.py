@@ -163,6 +163,15 @@ def homes(request: Request, id: int):
 
 
 
+@app.get("/product/all")
+def homes(request: Request):
+    with SessionLocal() as session:
+
+        stmt = (select(Products))
+        products = session.execute(stmt).scalars().all()
+
+    return {"products": products}
+
 
 @app.post("/category")
 def homes(data: Categoryamount):
@@ -174,6 +183,9 @@ def homes(data: Categoryamount):
         category_id = session.execute(stmt).scalar_one()
         session.commit()
     return {"category_id": category_id}
+
+
+
 
 
 
