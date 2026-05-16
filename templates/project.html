@@ -75,7 +75,7 @@
             <div class="product-grid">
                 {% for product in products %}
                     <div class="product-card" onclick="window.location.href='/product/get/{{product.id}}'">
-                        <img style = "width : 100%" src="{{product.photo}}" alt="Проект 1">
+                        <img style = "width : 100%" src="https://s3.kamaldinovnt.ru/photos/{{product.photo}}" alt="Проект 1">
                         <div class="product-info">
                             <h3>{{product.name}}</h3>
                              <p>{{product.price}}</p>
