@@ -163,8 +163,8 @@ def homes(request: Request, id: int):
 
 
 
-@app.get("/product/all")
-def homes(request: Request, response_model = ProductsResponse):
+@app.get("/product/all",  response_model = ProductsResponse)
+def homes(request: Request):
     with SessionLocal() as session:
 
         stmt = (select(Products))
