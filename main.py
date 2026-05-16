@@ -143,23 +143,23 @@ def homes(request: Request, id: int):
 
 
 
-@app.get("/category", response_class=HTMLResponse)
+@app.get("/category")
 def homes(request: Request):
     with SessionLocal() as session:
 
         stmt = (select(Category))
         categories = session.execute(stmt).scalars().all()
 
-    return templates.TemplateResponse("add_products_form.html", {"request": request, "categories": categories})
+    return {"categories": categories}
 
-@app.get("/category/{id}", response_class=HTMLResponse)
+@app.get("/category/{id}")
 def homes(request: Request, id: int):
     with SessionLocal() as session:
 
         stmt = select(Category).where(Category.id == id)
         categories_on_id = session.execute(stmt).scalar_one()
 
-    return templates.TemplateResponse("add_products_form.html", {"request": request, "categories_on_id": categories_on_id})
+    return {"categories_on_id": categories_on_id}
 
 
 
