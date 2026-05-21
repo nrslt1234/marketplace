@@ -140,3 +140,23 @@ class ProductSchema(BaseModel):
 
 class ProductsResponse(BaseModel):
     products: list[ProductSchema]
+
+
+
+
+
+
+
+
+
+class CategorySchema(BaseModel):
+    id: int
+    name: str
+
+    model_config = {
+        "from_attributes": True
+    }
+
+
+class CategoriesResponse(BaseModel):
+    products: list[CategorySchema]
