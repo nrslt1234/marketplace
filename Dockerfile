@@ -15,7 +15,9 @@ COPY templates ./templates
 COPY schemas.py .
 COPY security.py .
 COPY conf_minio.py .
+copy alembic ./alembic
+copy alembic.ini .
 
 EXPOSE 8000
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["sh", "-c", "python -m alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 8000"]

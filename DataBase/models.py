@@ -115,6 +115,7 @@ class Client(Base):
     email: Mapped[str] = mapped_column()
     password:  Mapped[str] = mapped_column()
     phone_number:  Mapped[str] = mapped_column()
+    is_admin: Mapped[bool] = mapped_column(default=False)
 
     purchases: Mapped[List["Purchases"]] = relationship(back_populates="client")
     basket_client: Mapped["BasketClient"] = relationship(back_populates="client")

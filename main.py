@@ -58,10 +58,24 @@ def homes(request: Request):
 
 @app.get("/product/add", response_class=HTMLResponse)
 def homes(request: Request):
-    with SessionLocal() as session:
-        stmt = select(Category)
-        categories = session.execute(stmt).scalars().all()
-    return templates.TemplateResponse("add_products_form.html", {"request": request, "categories" : categories})
+    user = request.session.get("user")
+    if user is None:
+        return templates.TemplateResponse("authorization.html", {"request": request})
+    client_id = user.get("client_id")
+    user = get_current_user(client_id)
+
+    if user["is_admin"] == True:
+
+        with SessionLocal() as session:
+            stmt = select(Category)
+            categories = session.execute(stmt).scalars().all()
+
+
+
+        return templates.TemplateResponse("add_products_form.html", {"request": request, "categories" : categories})
+
+    else:
+        return templates.TemplateResponse("personalaccount.html", {"request": request, "user": user})
 
 
 
@@ -428,6 +442,13 @@ def add_to_favourites(request: Request, data: FavCreate):
     return {"status": True}
 
 
+
+@app.get("/firstregistration", response_class=HTMLResponse)
+def homes(request: Request):
+    request.session.clear()
+    return templates.TemplateResponse("first_registration.html", {"request": request})
+
+
 # Post запрос данных пользователей
 @app.post("/reg")
 def homes(request: Request, data: RegCreate):
@@ -489,7 +510,8 @@ def get_current_user(client_id):
             "status": True,
             "first_name": client.first_name,
             "last_name": client.last_name,
-            "email": client.email
+            "email": client.email,
+            "is_admin": client.is_admin
         }
 
 
