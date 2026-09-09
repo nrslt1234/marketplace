@@ -22,6 +22,8 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy import select, insert, or_, and_, update, delete, func
 from sqlalchemy.orm import joinedload, selectinload
 
+from tasks import add_from_tasks
+
 from DataBase.models import Service, Ourwork, Products, Category, BasketClient, BasketProduct, Favourites, Client, \
     Forgotpasswordcode, Order, Orderproduct
 from DataBase.session import SessionLocal
@@ -54,6 +56,27 @@ def home(request: Request):
 @app.get("///", response_class=HTMLResponse)
 def homes(request: Request):
     return templates.TemplateResponse("index_1.html", {"request": request})
+
+
+
+
+@app.get("/justapitasks")
+def homes(request: Request, x:int, y:int):
+        task = add_from_tasks.apply_async(
+            args=[int(x), int(y)],
+            countdown=5,
+        )
+
+        return {
+            "task_id": task.id,
+            "status": "scheduled",
+            "x": x,
+            "y": y,
+        }
+
+
+
+
 
 
 @app.get("/product/add", response_class=HTMLResponse)

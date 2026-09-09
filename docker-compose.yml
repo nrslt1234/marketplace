@@ -27,6 +27,10 @@ services:
     ports:
       - "9005:8000"
 
+    depends_on:
+      - redis
+      - celery
+
   nginx:
     image: nginx:latest
     container_name: web_nginx
@@ -39,6 +43,20 @@ services:
       - ./certbot/www:/var/www/certbot
     depends_on:
       - api
+
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  celery:
+    build: .
+    command: celery -A celery_app.celery worker --loglevel=info
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
 
 
   minio:

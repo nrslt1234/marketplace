@@ -17,6 +17,8 @@ COPY security.py .
 COPY conf_minio.py .
 copy alembic ./alembic
 copy alembic.ini .
+copy tasks.py .
+copy celery_app.py .
 
 EXPOSE 8000
 
