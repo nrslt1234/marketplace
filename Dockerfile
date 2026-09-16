@@ -20,6 +20,7 @@ copy alembic.ini .
 copy tasks.py .
 copy celery_app.py .
 copy sender_email.py .
+copy sender_html_on_email.py .
 
 EXPOSE 8000
 

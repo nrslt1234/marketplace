@@ -23,7 +23,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy import select, insert, or_, and_, update, delete, func
 from sqlalchemy.orm import joinedload, selectinload
 
-from tasks import add_from_tasks, multiply, email_send
+from tasks import add_from_tasks, multiply, email_send, email_send_html
 
 from DataBase.models import Service, Ourwork, Products, Category, BasketClient, BasketProduct, Favourites, Client, \
     Forgotpasswordcode, Order, Orderproduct
@@ -571,6 +571,14 @@ def homes(request: Request, data: Buyandseconds):
             countdown=5,
         )
 
+
+
+
+        # Отправка HTMl-файла
+        task = email_send_html.apply_async(
+            args=[client.email, product.name],
+            countdown=5,
+        )
 
         return {"status": True, "email": client.email}
 
