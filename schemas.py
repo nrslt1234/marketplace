@@ -160,3 +160,10 @@ class CategorySchema(BaseModel):
 
 class CategoriesResponse(BaseModel):
     products: list[CategorySchema]
+
+
+
+
+
+class Buyandseconds(BaseModel):
+    product_id: int

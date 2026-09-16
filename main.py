@@ -4,6 +4,7 @@ import random
 
 import smtplib
 import uuid
+from datetime import datetime, timedelta
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
@@ -22,7 +23,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy import select, insert, or_, and_, update, delete, func
 from sqlalchemy.orm import joinedload, selectinload
 
-from tasks import add_from_tasks
+from tasks import add_from_tasks, multiply, email_send
 
 from DataBase.models import Service, Ourwork, Products, Category, BasketClient, BasketProduct, Favourites, Client, \
     Forgotpasswordcode, Order, Orderproduct
@@ -31,7 +32,7 @@ from DataBase.session import SessionLocal
 from random import shuffle
 
 from schemas import BasketCreate, FavCreate, RegCreate, AuthoCreate, ForgotCreate, VerifyCode, NewPassword, Newamount, \
-    CheckItem, OrderSchema, ProductCreate, Categoryamount, ProductsResponse, CategoriesResponse
+    CheckItem, OrderSchema, ProductCreate, Categoryamount, ProductsResponse, CategoriesResponse, Buyandseconds
 from security import hash_password, verify_password
 from starlette.middleware.sessions import SessionMiddleware
 
@@ -65,6 +66,35 @@ def homes(request: Request, x:int, y:int):
         task = add_from_tasks.apply_async(
             args=[int(x), int(y)],
             countdown=5,
+        )
+
+        return {
+            "task_id": task.id,
+            "status": "scheduled",
+            "x": x,
+            "y": y,
+        }
+
+@app.get("/multiplytasks")
+def homes(request: Request, x:int, y:int):
+        task = multiply.apply_async(
+            args=[int(x), int(y)],
+            eta=datetime(2026, 9, 13, 18, 7)
+        )
+
+        return {
+            "task_id": task.id,
+            "status": "scheduled",
+            "x": x,
+            "y": y,
+        }
+
+@app.get("/faketasks")
+def homes(request: Request, x:int, y:int):
+        task = multiply.apply_async(
+            args=[int(x), int(y)],
+            countdown = 10,
+            expires = 9
         )
 
         return {
@@ -520,6 +550,32 @@ def homes(request: Request):
     client_id = user.get("client_id")
     user = get_current_user(client_id)
     return templates.TemplateResponse("personalaccount.html", {"request": request, "user": user})
+
+
+@app.post("/buyand5seconds")
+def homes(request: Request, data: Buyandseconds):
+    with SessionLocal() as session:
+        user = request.session.get("user")
+        if user is None:
+            return templates.TemplateResponse("authorization.html", {"request": request})
+
+        client_id = user.get("client_id")
+        stmt = select(Client).where(Client.id == client_id)
+        client = session.execute(stmt).scalars().one_or_none()
+
+        stmt = select(Products).where(Products.id == data.product_id)
+        product = session.execute(stmt).scalars().one_or_none()
+
+        task = email_send.apply_async(
+            args=[client.email, product.name],
+            countdown=5,
+        )
+
+
+        return {"status": True, "email": client.email}
+
+
+
 
 
 def get_current_user(client_id):
