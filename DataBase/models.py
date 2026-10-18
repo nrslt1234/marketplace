@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import List
 from typing import Optional
-from sqlalchemy import ForeignKey, create_engine, select, insert, delete, update, DateTime, func, Table, Column
+from sqlalchemy import ForeignKey, create_engine, select, insert, delete, update, DateTime, func, Table, Column, inspect
 from sqlalchemy import String
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
 from sqlalchemy.orm import Mapped
@@ -38,7 +38,17 @@ purchases_products = Table(
     Column("product_id", ForeignKey("products.id"), primary_key=True),
 )
 class Products(Base):
+
+
     __tablename__ = "products"
+
+    def to_dict(self):
+        return {
+            column.key: getattr(self, column.key)
+            for column in inspect(self).mapper.column_attrs
+        }
+
+
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column()
     price: Mapped[int] = mapped_column()
@@ -54,6 +64,8 @@ class Products(Base):
 
     category_id: Mapped[int] = mapped_column(ForeignKey("category.id"))
     category: Mapped["Category"] = relationship(back_populates="products")
+
+
 
 
 class BasketClient(Base):

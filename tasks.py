@@ -22,5 +22,5 @@ def email_send(email: str, product_name: str,) -> str:
 
 
 @celery.task
-def email_send_html(email: str, product_name: str,) -> str:
-    send_email_html(email, product_name)
+def email_send_html(email: str, product_information_for_html: str,) -> str:
+    send_email_html(email, product_information_for_html)

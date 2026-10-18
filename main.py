@@ -566,22 +566,30 @@ def homes(request: Request, data: Buyandseconds):
         stmt = select(Products).where(Products.id == data.product_id)
         product = session.execute(stmt).scalars().one_or_none()
 
+
+
+       #Передаем фото и название товара на html-странице в почту
+        stmt = select(Products).where(Products.id == data.product_id)
+        products = session.execute(stmt).scalars().all()
+
+        product_information_for_html = [
+            product.to_dict()
+            for product in products
+        ]
+
         task = email_send.apply_async(
             args=[client.email, product.name],
             countdown=5,
         )
 
-
-
-
         # Отправка HTMl-файла
         task = email_send_html.apply_async(
-            args=[client.email, product.name],
+            args=[client.email, product_information_for_html],
             countdown=5,
         )
 
-        return {"status": True, "email": client.email}
-
+        # return {"status": True, "email": client.email}
+        return templates.TemplateResponse("smtphtmlscript.html", {"request": request, "product_information_for_html": product_information_for_html})
 
 
 

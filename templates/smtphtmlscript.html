@@ -258,16 +258,19 @@
             <p class="subtitle">Мы очень ценим ваше доверие и надеемся, что наш товар принесёт вам много радости!</p>
 
             <!-- Карточка товара -->
+
+            {% for productinfo in product_information_for_html %}
             <div class="product-card">
                 <div class="product-image">
                     <!-- Изображение AirPods Pro (заглушка) -->
-                    <img src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/MQD83?wid=400&hei=400&fmt=jpeg&qlt=90&.v=1660803972361" alt="Apple AirPods Pro">
+                    <img src= "{{productinfo.photo}}" alt="{{productinfo.name}}">
                 </div>
                 <div class="product-info">
-                    <h3>Apple AirPods Pro</h3>
-                    <p>Беспроводные наушники</p>
+                    <h3>{{productinfo.name}}</h3>
+                    <p>{{productinfo.description}}</p>
                 </div>
             </div>
+            {% endfor %}
 
             <!-- Эмоциональный блок -->
             <div class="emotion-section">
