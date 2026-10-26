@@ -21,6 +21,8 @@ copy tasks.py .
 copy celery_app.py .
 copy sender_email.py .
 copy sender_html_on_email.py .
+COPY consumer.py .
+COPY consumerrabbit.py .
 
 EXPOSE 8000
 

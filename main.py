@@ -3,6 +3,7 @@ import os
 import random
 
 import smtplib
+import threading
 import uuid
 from datetime import datetime, timedelta
 from email.mime.text import MIMEText
@@ -36,6 +37,13 @@ from schemas import BasketCreate, FavCreate, RegCreate, AuthoCreate, ForgotCreat
 from security import hash_password, verify_password
 from starlette.middleware.sessions import SessionMiddleware
 
+
+
+
+
+from consumer import run_consumer
+
+
 app = FastAPI(title="Simple FastAPI App")
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -47,6 +55,10 @@ app.add_middleware(SessionMiddleware, secret_key="super-secret-key")
 @app.get("/health")
 def health_check():
     return {"status": "ok"}
+
+@app.on_event("startup")
+def start_consumer():
+    threading.Thread(target=run_consumer, daemon=True).start()
 
 
 @app.get("/", response_class=HTMLResponse)
