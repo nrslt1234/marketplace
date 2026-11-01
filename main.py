@@ -39,8 +39,9 @@ from starlette.middleware.sessions import SessionMiddleware
 
 
 
-
-
+# RabbitMQ
+from consumerrabbit import run_consumer_rabbit
+# Kafka
 from consumer import run_consumer
 
 
@@ -57,9 +58,13 @@ def health_check():
     return {"status": "ok"}
 
 @app.on_event("startup")
-def start_consumer():
+def start_kafka_consumer():
     threading.Thread(target=run_consumer, daemon=True).start()
 
+
+@app.on_event("startup")
+def start_rabbit_consumer():
+    threading.Thread(target=run_consumer_rabbit, daemon=True).start()
 
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request):

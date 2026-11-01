@@ -23,13 +23,22 @@ services:
     container_name: web_fastapi
     env_file:
       - .env
+    environment:
+      RABBITMQ_URL: ${RABBITMQ_URL}
+      QUEUE: notifications.created
 
     ports:
       - "9005:8000"
 
     depends_on:
-      - redis
-      - celery
+      redis:
+        condition: service_started
+      celery:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+      db:
+        condition: service_healthy
 
   nginx:
     image: nginx:latest
@@ -73,6 +82,21 @@ services:
     ports:
       - "9000:9000"
       - "9001:9001"
+
+
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    container_name: web_rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: ${app_user}
+      RABBITMQ_DEFAULT_PASS: ${app_pass}
+    ports: [ "5672:5672", "15672:15672" ]
+    volumes: [ rabbitmq_data:/var/lib/rabbitmq ]
+    healthcheck:
+      test: [ "CMD", "rabbitmq-diagnostics", "-q", "ping" ]
+      interval: 10s
+      timeout: 10s
+      retries: 10
 
   kafka:
     image: apache/kafka:3.9.1
@@ -134,7 +158,22 @@ services:
       db:
         condition: service_healthy
 
+  notification-service:
+    build: ./services/notification-service
+    container_name: web_notification_service
+    environment:
+      RABBITMQ_URL: ${RABBITMQ_URL}
+      QUEUE: notifications.created
+    ports: [ "9007:8000" ]
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+
+
+
 volumes:
   pgdata:
   minio_data:
   kafka_data:
+  rabbitmq_data:

@@ -7,30 +7,30 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-def send_email_text(receiver_email: str, product_name: str):
-    # данные отправителя (mail.ru)
-    sender_email = "ivan_ivanov_ivanovich1234@mail.ru"
-    sender_password = os.getenv("EMAILPASSWORD")  # пароль приложения
+SENDER_EMAIL = "ivan_ivanov_ivanovich1234@mail.ru"
 
-    # тема и тело письма
-    subject = "ДОСТАВКА ВАШЕГО ТОВАРА"
-    body = f"✅ ваш товар \"{product_name}\" доставлен"
 
-    # формирование письма
+def send_email(receiver_email: str, subject: str, body: str) -> bool:
     msg = MIMEMultipart()
-    msg["From"] = sender_email
+    msg["From"] = SENDER_EMAIL
     msg["To"] = receiver_email
     msg["Subject"] = subject
-    msg.attach(MIMEText(body, "plain"))
+    msg.attach(MIMEText(body, "plain", "utf-8"))
 
     try:
-        # подключение к SMTP-серверу mail.ru
-        with smtplib.SMTP("smtp.mail.ru", 587) as server:
-            server.starttls()
-            server.login(sender_email, sender_password)
+        with smtplib.SMTP_SSL("smtp.mail.ru", 465, timeout=20) as server:
+            server.login(SENDER_EMAIL, os.getenv("EMAILPASSWORD"))
             server.send_message(msg)
-            print(f"✅ ваш товар \"{product_name}\" доставлен")
+            print(f"✅ Письмо отправлено на {receiver_email}", flush=True)
             return True
     except Exception as e:
-        print(f"❌ Ошибка при отправке: {e}")
+        print(f"❌ Ошибка при отправке: {e}", flush=True)
         return False
+
+
+def send_email_text(receiver_email: str, product_name: str) -> bool:
+    return send_email(
+        receiver_email,
+        "ДОСТАВКА ВАШЕГО ТОВАРА",
+        f'✅ ваш товар "{product_name}" доставлен',
+    )
