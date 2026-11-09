@@ -1,0 +1,76 @@
+name: marketplace-integration
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: marketplace_integration
+      POSTGRES_USER: integration
+      POSTGRES_PASSWORD: integration
+    volumes:
+      - integration_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-h", "127.0.0.1", "-U", "integration", "-d", "marketplace_integration"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  kafka:
+    image: apache/kafka:3.9.1
+    environment:
+      CLUSTER_ID: "MkU3OEVBNTcwNTJENDM2Qk"
+      KAFKA_NODE_ID: "1"
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://:19092,CONTROLLER://:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:19092
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: "1"
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
+    healthcheck:
+      test: ["CMD", "/opt/kafka/bin/kafka-topics.sh", "--bootstrap-server", "kafka:19092", "--list"]
+      interval: 5s
+      timeout: 10s
+      retries: 20
+
+  kafka-init:
+    image: apache/kafka:3.9.1
+    depends_on:
+      kafka:
+        condition: service_healthy
+    entrypoint: ["/opt/kafka/bin/kafka-topics.sh"]
+    command: ["--bootstrap-server", "kafka:19092", "--create", "--if-not-exists", "--topic", "orders.integration", "--partitions", "1", "--replication-factor", "1"]
+
+  order-service:
+    build: ./services/order-service
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:19092
+      KAFKA_ORDERS_TOPIC: orders.integration
+      DATABASE_URL: postgresql://integration:integration@db:5432/marketplace_integration
+    depends_on:
+      db:
+        condition: service_healthy
+      kafka-init:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "python", "-c", "from urllib.request import urlopen; urlopen('http://127.0.0.1:8000/openapi.json', timeout=2).close()"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+
+  tests:
+    image: python:3.12
+    working_dir: /work
+    volumes:
+      - ./services/order-service/tests/integration:/work/tests/integration:ro
+    environment:
+      TEST_BASE_URL: http://order-service:8000
+      TEST_DATABASE_URL: postgresql://integration:integration@db:5432/marketplace_integration
+    command: >
+      sh -c "python -m pip install -q pytest==8.3.5 httpx==0.28.1 psycopg2-binary==2.9.10
+      && python -m pytest tests/integration -v -p no:cacheprovider"
+
+volumes:
+  integration_pgdata:
